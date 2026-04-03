@@ -34,7 +34,7 @@ const ModelInfo = () => {
                     <Box className="text-purple-400 mb-3" size={28} />
                     <h4 className="text-slate-400 text-sm font-medium">Dataset Size</h4>
                     <p className="text-xl font-semibold mt-1">1,470 Records</p>
-                    <p className="text-xs text-slate-500 mt-2">IBM HR Analytics Dataset</p>
+                    <p className="text-xs text-slate-500 mt-2">Attrition Analytics Dataset</p>
                 </div>
                 <div className="bg-slate-900 rounded-xl p-6 text-white border border-slate-700 shadow-md">
                     <Activity className="text-green-400 mb-3" size={28} />

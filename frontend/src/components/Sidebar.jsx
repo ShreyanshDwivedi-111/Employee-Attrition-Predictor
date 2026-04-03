@@ -43,7 +43,7 @@ const Sidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
             {/* Sidebar */}
             <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 flex flex-col`}>
                 <div className="flex h-16 shrink-0 items-center px-6 bg-slate-950">
-                    <span className="text-xl font-bold tracking-wider text-teal-400">HR Predictor</span>
+                    <span className="text-xl font-bold tracking-wider text-teal-400">Attrition Predictor</span>
                 </div>
 
                 <nav className="flex flex-1 flex-col overflow-y-auto px-4 py-4">

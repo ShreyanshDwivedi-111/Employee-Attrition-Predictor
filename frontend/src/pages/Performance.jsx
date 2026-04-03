@@ -34,7 +34,7 @@ const Performance = () => {
     return (
         <div className="space-y-6 max-w-7xl mx-auto">
             <h1 className="text-2xl font-semibold text-gray-900">Model Performance & Evaluation</h1>
-            <p className="text-gray-600 mb-6">Evaluation metrics from the TensorFlow/Keras Neural Network trained on the HR dataset.</p>
+            <p className="text-gray-600 mb-6">Evaluation metrics from the TensorFlow/Keras Neural Network trained on the Attrition dataset.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard title="Accuracy" value="91.2%" subtext="Overall correctness" icon={Award} colorClass="bg-blue-100 text-blue-600" />
