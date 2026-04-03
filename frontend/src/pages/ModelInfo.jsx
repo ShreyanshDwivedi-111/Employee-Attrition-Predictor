@@ -46,7 +46,7 @@ const ModelInfo = () => {
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mt-6">
                 <h3 className="text-xl font-medium text-gray-900 mb-6 border-b pb-3">Feature Importance</h3>
-                <div className="w-full h-[400px]">
+                <div className="w-full h-100">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={featureImportance} layout="vertical" margin={{ top: 5, right: 30, left: 60, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" horizontal={false} />

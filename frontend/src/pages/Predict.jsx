@@ -190,7 +190,7 @@ const Predict = () => {
                                         {result.reasons && result.reasons.length > 0 ? (
                                             result.reasons.map((reason, i) => (
                                                 <li key={i} className="flex items-start">
-                                                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mt-2 mr-2 flex-shrink-0"></span>
+                                                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mt-2 mr-2 shrink-0"></span>
                                                     <span className="text-gray-700">{reason}</span>
                                                 </li>
                                             ))
