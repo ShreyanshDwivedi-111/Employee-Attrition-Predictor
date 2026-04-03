@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import { AlertCircle, CheckCircle2, Loader2, Gauge, Target } from 'lucide-react';
 
 const Predict = () => {
+    // Backend setup
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     const { token } = useAuth();
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
@@ -41,7 +44,7 @@ const Predict = () => {
         setResult(null);
 
         try {
-            const res = await axios.post('http://localhost:5000/api/predict', formData, {
+            const res = await axios.post(`${apiUrl}/api/predict`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setResult(res.data);

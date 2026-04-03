@@ -5,6 +5,9 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { Users, UserMinus, UserCheck, TrendingUp } from 'lucide-react';
 
 const Dashboard = () => {
+    // Backend setup
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     const { token } = useAuth();
     const [stats, setStats] = useState({
         total: 1470,
@@ -17,7 +20,7 @@ const Dashboard = () => {
         // Fetch real stats from database history
         const fetchStats = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/stats', {
+                const res = await axios.get(`${apiUrl}/api/stats`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (res.data.totalEmployeesEvaluated > 0) {

@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import { Clock, Calendar } from 'lucide-react';
 
 const PredictionHistory = () => {
+    // Backend setup
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     const { token } = useAuth();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,7 +14,7 @@ const PredictionHistory = () => {
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/history', {
+                const res = await axios.get(`${apiUrl}/api/history`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setHistory(res.data);

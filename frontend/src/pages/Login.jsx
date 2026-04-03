@@ -4,6 +4,9 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+    // Backend setup
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -14,7 +17,7 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            const res = await axios.post('http://localhost:5000/auth/login', { email, password });
+            const res = await axios.post(`${apiUrl}/auth/login`, { email, password });
             login(res.data.user, res.data.token);
             navigate('/');
         } catch (err) {
