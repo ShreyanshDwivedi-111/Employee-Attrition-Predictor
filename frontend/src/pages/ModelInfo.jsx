@@ -1,65 +1,104 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Server, Grid, Activity, Box } from 'lucide-react';
+import { Server, LayoutGrid, Activity, Box, Database } from 'lucide-react';
 
 const ModelInfo = () => {
-    // Standard feature importance for Attrition NNs/Random Forests
     const featureImportance = [
-        { name: 'OverTime', importance: 0.85 },
-        { name: 'MonthlyIncome', importance: 0.72 },
-        { name: 'Age', importance: 0.65 },
+        { name: 'OverTime',       importance: 0.85 },
+        { name: 'MonthlyIncome',  importance: 0.72 },
+        { name: 'Age',            importance: 0.65 },
         { name: 'YearsAtCompany', importance: 0.58 },
-        { name: 'JobLevel', importance: 0.55 },
-        { name: 'JobSatisfaction', importance: 0.45 },
+        { name: 'TotalWorkingYrs',importance: 0.55 },
+        { name: 'JobSatisfaction',importance: 0.45 },
+        { name: 'DistanceFromHome',importance: 0.42 },
+        { name: 'NumCompanies',   importance: 0.38 },
     ];
 
-    return (
-        <div className="space-y-6 max-w-7xl mx-auto">
-            <h1 className="text-2xl font-semibold text-gray-900">Machine Learning Model Details</h1>
+    const infoCards = [
+        {
+            icon: Server,
+            iconColor: 'text-brand-500',
+            iconBg: 'bg-brand-50',
+            label: 'Architecture',
+            value: 'XGBoost Classifier',
+            sub: 'Gradient Boosted Decision Trees',
+        },
+        {
+            icon: LayoutGrid,
+            iconColor: 'text-indigo-500',
+            iconBg: 'bg-indigo-50',
+            label: 'Input Features',
+            value: '25 Attributes',
+            sub: 'Numeric, Categorical & Ordinal',
+        },
+        {
+            icon: Database,
+            iconColor: 'text-violet-500',
+            iconBg: 'bg-violet-50',
+            label: 'Training Dataset',
+            value: '1,470 Records',
+            sub: 'Attrition Dataset',
+        },
+        {
+            icon: Activity,
+            iconColor: 'text-emerald-500',
+            iconBg: 'bg-emerald-50',
+            label: 'Target Variable',
+            value: 'Attrition (Binary)',
+            sub: 'Leave (1) or Stay (0)',
+        },
+    ];
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-slate-900 rounded-xl p-6 text-white border border-slate-700 shadow-md">
-                    <Server className="text-teal-400 mb-3" size={28} />
-                    <h4 className="text-slate-400 text-sm font-medium">Architecture</h4>
-                    <p className="text-xl font-semibold mt-1">Deep Neural Network</p>
-                    <p className="text-xs text-slate-500 mt-2">Keras Sequential API</p>
-                </div>
-                <div className="bg-slate-900 rounded-xl p-6 text-white border border-slate-700 shadow-md">
-                    <Grid className="text-blue-400 mb-3" size={28} />
-                    <h4 className="text-slate-400 text-sm font-medium">Input Features</h4>
-                    <p className="text-xl font-semibold mt-1">14 Selected Traits</p>
-                    <p className="text-xs text-slate-500 mt-2">Scaled Numeric & Categorical</p>
-                </div>
-                <div className="bg-slate-900 rounded-xl p-6 text-white border border-slate-700 shadow-md">
-                    <Box className="text-purple-400 mb-3" size={28} />
-                    <h4 className="text-slate-400 text-sm font-medium">Dataset Size</h4>
-                    <p className="text-xl font-semibold mt-1">1,470 Records</p>
-                    <p className="text-xs text-slate-500 mt-2">Attrition Analytics Dataset</p>
-                </div>
-                <div className="bg-slate-900 rounded-xl p-6 text-white border border-slate-700 shadow-md">
-                    <Activity className="text-green-400 mb-3" size={28} />
-                    <h4 className="text-slate-400 text-sm font-medium">Target Variable</h4>
-                    <p className="text-xl font-semibold mt-1">Attrition (Binary)</p>
-                    <p className="text-xs text-slate-500 mt-2">Leave (1) or Stay (0)</p>
-                </div>
+    const CustomTooltip = ({ active, payload }) => {
+        if (!active || !payload?.length) return null;
+        return (
+            <div className="bg-white rounded-xl shadow-lg border border-slate-200 px-4 py-3 text-sm">
+                <p className="font-semibold text-slate-800">{payload[0]?.payload?.name}</p>
+                <p className="text-slate-600">Importance: <span className="font-semibold">{payload[0]?.value}</span></p>
+            </div>
+        );
+    };
+
+    return (
+        <div className="space-y-6">
+            <p className="text-sm text-slate-500">Technical details about the machine learning pipeline used for predictions.</p>
+
+            {/* Info cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 stagger">
+                {infoCards.map((c) => {
+                    const Icon = c.icon;
+                    return (
+                        <div key={c.label} className="card p-6 animate-fade-in">
+                            <div className={`p-2.5 rounded-xl ${c.iconBg} ${c.iconColor} w-fit mb-4`}>
+                                <Icon size={20} />
+                            </div>
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{c.label}</p>
+                            <p className="text-lg font-bold text-slate-900 mt-1">{c.value}</p>
+                            <p className="text-xs text-slate-400 mt-1">{c.sub}</p>
+                        </div>
+                    );
+                })}
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mt-6">
-                <h3 className="text-xl font-medium text-gray-900 mb-6 border-b pb-3">Feature Importance</h3>
-                <div className="w-full h-100">
+            {/* Feature Importance Chart */}
+            <div className="card-static p-6">
+                <h3 className="text-base font-semibold text-slate-800 mb-1">Feature Importance</h3>
+                <p className="text-xs text-slate-400 mb-6">Relative influence of each feature on the model's attrition prediction</p>
+                <div className="w-full h-80">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={featureImportance} layout="vertical" margin={{ top: 5, right: 30, left: 60, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                            <XAxis type="number" domain={[0, 1]} />
-                            <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} />
-                            <Tooltip cursor={{ fill: '#f3f4f6' }} />
-                            <Bar dataKey="importance" fill="#0f766e" radius={[0, 4, 4, 0]} barSize={24} />
+                        <BarChart data={featureImportance} layout="vertical" margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                            <XAxis type="number" domain={[0, 1]} tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                            <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 13 }} />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f1f5f9' }} />
+                            <Bar dataKey="importance" fill="#2563eb" radius={[0, 6, 6, 0]} barSize={20} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <p className="text-sm text-gray-500 mt-6 bg-gray-50 p-4 rounded-md">
-                    <strong>Interpretation:</strong> The chart displays the relative influence of factors on the model's attrition prediction. <strong>OverTime</strong> and <strong>MonthlyIncome</strong> are the strongest predictors indicating whether an employee is at high risk of leaving.
-                </p>
+                <div className="mt-6 bg-brand-50 rounded-xl p-4 border border-brand-100 text-sm text-brand-800">
+                    <strong>Interpretation:</strong> The chart displays relative influence of each factor on attrition prediction.{' '}
+                    <strong>OverTime</strong> and <strong>MonthlyIncome</strong> are the strongest predictors — employees working overtime with lower pay are at highest risk.
+                </div>
             </div>
         </div>
     );

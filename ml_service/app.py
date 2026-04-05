@@ -38,7 +38,7 @@ class EmployeeData(BaseModel):
     Department:               str     # Sales | Research & Development | Human Resources
     DistanceFromHome:         int
     Education:                int     # 1–5
-    EducationField:           str     # Life Sciences | Medical | Marketing | Technical Degree | Human Resources | Other
+    EducationField:           str     # Science | Medical | Marketing | Technical Degree | Human Resources | Other
     EnvironmentSatisfaction:  int     # 1–4
     Gender:                   str     # Male | Female
     JobInvolvement:           int     # 1–4
