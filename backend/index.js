@@ -152,8 +152,8 @@ app.post('/api/predict', authenticateToken, async (req, res) => {
     try {
       mlResponse = await axios.post(
         `${ML_SERVICE_URL}/predict`,
-        employeeData,
-        { timeout: 10000 }   // FIX #2: 10s timeout — never hang indefinitely
+        employeeData
+        // No timeout — ML service on Render free tier may cold-start (30-60s)
       );
     } catch (axiosError) {
       // FIX #1: Surface the actual ML service validation/error message

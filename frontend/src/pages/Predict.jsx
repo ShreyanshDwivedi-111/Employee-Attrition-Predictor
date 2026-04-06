@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import {
     AlertCircle, CheckCircle2, Loader2, Gauge, Target,
     User, Briefcase, GraduationCap, DollarSign, Clock, HeartHandshake,
-    ChevronDown, ChevronUp, Lightbulb
+    ChevronDown, ChevronUp, Lightbulb, Brain, Zap, Server
 } from 'lucide-react';
 
 // ── Section collapse helper ──────────────────────────────────────
@@ -46,6 +46,7 @@ const Predict = () => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     const { token } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [loadingStage, setLoadingStage] = useState(0);
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
 
@@ -89,8 +90,16 @@ const Predict = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setLoadingStage(0);
         setError(null);
         setResult(null);
+
+        // Cycle through loading stages to give feedback during cold-start
+        const stages = [0, 1, 2];
+        const stageTimers = [
+            setTimeout(() => setLoadingStage(1), 5000),
+            setTimeout(() => setLoadingStage(2), 20000),
+        ];
 
         try {
             const res = await axios.post(`${apiUrl}/api/predict`, formData, {
@@ -100,7 +109,9 @@ const Predict = () => {
         } catch (err) {
             setError(err.response?.data?.detail || err.response?.data?.error || 'Failed to predict attrition.');
         } finally {
+            stageTimers.forEach(clearTimeout);
             setLoading(false);
+            setLoadingStage(0);
         }
     };
 
@@ -378,6 +389,56 @@ const Predict = () => {
                                         </ul>
                                     </div>
                                 )}
+                            </div>
+                        </div>
+                    ) : loading ? (
+                        <div className="card-static overflow-hidden sticky top-6">
+                            {/* Animated header */}
+                            <div className="p-8 text-center text-white bg-gradient-to-br from-brand-500 to-indigo-600 relative overflow-hidden">
+                                <div className="absolute inset-0 opacity-20"
+                                    style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+                                />
+                                <div className="relative z-10">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 mb-4 animate-pulse">
+                                        <Brain size={32} />
+                                    </div>
+                                    <h2 className="text-xl font-bold mb-1">Analyzing Employee Data</h2>
+                                    <p className="text-white/70 text-sm">AI model is running prediction…</p>
+                                </div>
+                            </div>
+
+                            {/* Stage indicators */}
+                            <div className="p-6 space-y-4">
+                                {[
+                                    { icon: Zap,    label: 'Sending data to backend',     done: loadingStage >= 0 },
+                                    { icon: Server, label: 'Waking up ML service',         done: loadingStage >= 1 },
+                                    { icon: Brain,  label: 'Running XGBoost prediction',   done: loadingStage >= 2 },
+                                ].map(({ icon: Icon, label, done }, i) => (
+                                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-500 ${
+                                        loadingStage === i ? 'bg-brand-50 border border-brand-200' :
+                                        loadingStage > i  ? 'opacity-50' : 'opacity-30'
+                                    }`}>
+                                        <div className={`p-2 rounded-lg ${
+                                            loadingStage === i ? 'bg-brand-100 text-brand-600' : 'bg-slate-100 text-slate-400'
+                                        }`}>
+                                            {loadingStage === i
+                                                ? <Loader2 size={16} className="animate-spin" />
+                                                : <Icon size={16} />
+                                            }
+                                        </div>
+                                        <span className={`text-sm font-medium ${
+                                            loadingStage === i ? 'text-brand-700' : 'text-slate-400'
+                                        }`}>{label}</span>
+                                        {loadingStage > i && <CheckCircle2 size={16} className="ml-auto text-emerald-500" />}
+                                    </div>
+                                ))}
+
+                                <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
+                                    <AlertCircle size={15} className="text-amber-500 shrink-0 mt-0.5" />
+                                    <p className="text-xs text-amber-700 leading-relaxed">
+                                        The ML service may take up to <strong>60 seconds</strong> to wake up from sleep on the free tier. Please wait…
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     ) : (
